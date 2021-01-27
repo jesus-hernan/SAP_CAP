@@ -1,6 +1,9 @@
 namespace com.logali;
 
-using {cuid} from '@sap/cds/common';
+using {
+    cuid,
+    managed
+} from '@sap/cds/common';
 
 type Name : String(20);
 type Dec : Decimal(16, 2);
@@ -13,9 +16,9 @@ type Address {
     Country    : String(3);
 }
 
-entity Products : cuid {
-    Name             : Name;
-    Description      : String;
+entity Products : cuid, managed {
+    Name             : localized Name;
+    Description      : localized String;
     ImageUrl         : String;
     ReleaseDate      : DateTime;
     DiscontinuedDate : DateTime;
@@ -35,7 +38,7 @@ entity Products : cuid {
                            on ToReviews.ToProduct = $self;
 }
 
-entity Suppliers : cuid {
+entity Suppliers : cuid, managed {
     Name      : Products : Name;
     Address   : Address;
     Email     : String;
@@ -45,7 +48,7 @@ entity Suppliers : cuid {
                     on ToProduct.ToSupplier = $self;
 }
 
-entity ProductReviews : cuid {
+entity ProductReviews : cuid, managed {
     Name      : Name;
     Rating    : Integer;
     Comment   : String;
@@ -68,30 +71,30 @@ entity Categories {
 
 entity StockAvailability {
     key ID          : Integer;
-        Description : String;
+        Description : localized String;
         ToProduct   : Association to Products
                           on ID = ID;
 }
 
 entity Currencies {
     key ID          : String(3);
-        Description : String;
+        Description : localized String;
 }
 
 entity UnitOfMeasures {
     key ID          : String(2);
-        Description : String;
+        Description : localized String;
 }
 
 entity DimensionUnits {
     key ID          : String(2);
-        Description : String;
+        Description : localized String;
 }
 
 entity Months {
     key ID               : String(2);
-        Description      : String;
-        ShortDescription : String(3);
+        Description      : localized String;
+        ShortDescription : localized String(3);
 }
 
 
