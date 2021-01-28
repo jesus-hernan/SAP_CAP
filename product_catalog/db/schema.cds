@@ -16,87 +16,101 @@ type Address {
     Country    : String(3);
 }
 
-entity Products : cuid, managed {
-    Name             : localized Name;
-    Description      : localized String;
-    ImageUrl         : String;
-    ReleaseDate      : DateTime;
-    DiscontinuedDate : DateTime;
-    Price            : Dec;
-    Height           : type of Price;
-    Width            : Decimal(16, 2);
-    Depth            : Decimal(16, 2);
-    Quantity         : Decimal(16, 2);
-    ToUnitOfMeasure  : Association to UnitOfMeasures;
-    ToCurrency       : Association to Currencies;
-    ToDimensionUnit  : Association to DimensionUnits;
-    ToSalesData      : Association to many SalesData
-                           on ToSalesData.ToProduct = $self;
-    ToCategory       : Association to Categories;
-    ToSupplier       : Association to Suppliers;
-    ToReviews        : Association to many ProductReviews
-                           on ToReviews.ToProduct = $self;
-}
-
-entity Suppliers : cuid, managed {
-    Name      : Products : Name;
-    Address   : Address;
-    Email     : String;
-    Phone     : String;
-    Fax       : String;
-    ToProduct : Association to Products
-                    on ToProduct.ToSupplier = $self;
-}
-
-entity ProductReviews : cuid, managed {
-    Name      : Name;
-    Rating    : Integer;
-    Comment   : String;
-    ToProduct : Association to Products;
-}
-
-entity SalesData : cuid {
-    DeliveryDate    : DateTime;
-    Revenue         : Decimal(16, 2);
-    ToProduct       : Association to Products;
-    ToCurrency      : Association to Currencies;
-    ToDeliveryMonth : Association to Months;
-}
-
-
-entity Categories {
-    key ID   : String(1);
-        Name : type of Products : Name;
-}
-
-entity StockAvailability {
-    key ID          : Integer;
-        Description : localized String;
-        ToProduct   : Association to Products
-                          on ID = ID;
-}
-
-entity Currencies {
-    key ID          : String(3);
-        Description : localized String;
-}
-
-entity UnitOfMeasures {
-    key ID          : String(2);
-        Description : localized String;
-}
-
-entity DimensionUnits {
-    key ID          : String(2);
-        Description : localized String;
-}
-
-entity Months {
-    key ID               : String(2);
+context mod {
+    entity Products : cuid, managed {
+        Name             : localized Name;
         Description      : localized String;
-        ShortDescription : localized String(3);
+        ImageUrl         : String;
+        ReleaseDate      : DateTime;
+        DiscontinuedDate : DateTime;
+        Price            : Dec;
+        Height           : type of Price;
+        Width            : Decimal(16, 2);
+        Depth            : Decimal(16, 2);
+        Quantity         : Decimal(16, 2);
+        ToUnitOfMeasure  : Association to UnitOfMeasures;
+        ToCurrency       : Association to Currencies;
+        ToDimensionUnit  : Association to DimensionUnits;
+        ToSalesData      : Association to many tda.SalesData
+                               on ToSalesData.ToProduct = $self;
+        ToCategory       : Association to Categories;
+        ToSupplier       : Association to Suppliers;
+        ToReviews        : Association to many tda.ProductReviews
+                               on ToReviews.ToProduct = $self;
+    }
+
+    entity Suppliers : cuid, managed {
+        Name      : Products : Name;
+        Address   : Address;
+        Email     : String;
+        Phone     : String;
+        Fax       : String;
+        ToProduct : Association to Products
+                        on ToProduct.ToSupplier = $self;
+    }
+
+    entity Categories {
+        key ID   : String(1);
+            Name : type of Products : Name;
+    }
+
+    entity StockAvailability {
+        key ID          : Integer;
+            Description : localized String;
+            ToProduct   : Association to Products
+                              on ID = ID;
+    }
+
+    entity Currencies {
+        key ID          : String(3);
+            Description : localized String;
+    }
+
+    entity UnitOfMeasures {
+        key ID          : String(2);
+            Description : localized String;
+    }
+
+    entity DimensionUnits {
+        key ID          : String(2);
+            Description : localized String;
+    }
+
+    entity Months {
+        key ID               : String(2);
+            Description      : localized String;
+            ShortDescription : localized String(3);
+    }
 }
 
+context tda {
+    entity ProductReviews : cuid, managed {
+        Name      : Name;
+        Rating    : Integer;
+        Comment   : String;
+        ToProduct : Association to mod.Products;
+    }
+
+    entity SalesData : cuid {
+        DeliveryDate    : DateTime;
+        Revenue         : Decimal(16, 2);
+        ToProduct       : Association to mod.Products;
+        ToCurrency      : Association to mod.Currencies;
+        ToDeliveryMonth : Association to mod.Months;
+    }
+}
+
+context view {
+    entity AverageRating as
+        select from tda.ProductReviews {
+            ToProduct.ID as ProductId,
+            avg(
+                Rating
+            )            as AverageRating : Decimal(16, 2)
+        }
+        group by
+            ToProduct.ID;
+}
 
 //***** Test Definitions *****//
 /* entity SelProducts                   as select from Products;

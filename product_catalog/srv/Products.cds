@@ -1,9 +1,29 @@
 using {com.logali as sch} from '../db/schema';
 
 define service catProd {
-    entity Products   as projection on sch.Products;
-    entity Suppliers  as projection on sch.Suppliers;
-    entity Currencies as projection on sch.Currencies;
+
+    entity Products as
+        select from sch.mod.Products {
+            ID,
+            Name,
+            Description,
+            ImageUrl,
+            ReleaseDate,
+            DiscontinuedDate,
+            Price,
+            Height,
+            Width,
+            Depth,
+            ToUnitOfMeasure,
+            ToCurrency,
+            ToCategory,
+            ToCategory.Name as Category,
+            ToDimensionUnit,
+            ToSalesData,
+            ToSupplier,
+            ToReviews
+        };
+
 }
 
 
