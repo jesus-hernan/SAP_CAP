@@ -3,13 +3,14 @@ using {com.logali as sch} from '../db/schema';
 define service catProd {
 
     entity Products          as
-        select from sch.mod.Products {
+        select from sch.view.Products {
             ID,
             Name                        @mandatory,
             Description                 @mandatory,
             ImageUrl,
             ReleaseDate,
             DiscontinuedDate,
+            Rating, //add
             Price                       @mandatory,
             Height,
             Width,
@@ -27,6 +28,8 @@ define service catProd {
             ToCategory.Name as Category @readonly,
             ToDimensionUnit,
             ToSalesData,
+            ToStockAvailability,
+            StockAvailability,
             ToSupplier,
             ToReviews
         };
@@ -104,7 +107,7 @@ define service catProd {
 
 
 //***** Test Definitions *****//
-service servTest {
+/* service servTest {
 
     entity infix         as
         select ToSupplier[Name = 'Tokyo Traders'].Phone from sch.mod.Products
@@ -112,7 +115,12 @@ service servTest {
             Products.Name = 'DVD Player';
 
     entity entityJoin    as
-        select Phone from sch.mod.Products
+        select
+            Phone,
+            cast(
+                Price as Integer
+            ) as Price
+        from sch.mod.Products
         inner join sch.mod.Suppliers supp
             on(
                 supp.ID = Products.ID
@@ -123,7 +131,6 @@ service servTest {
         where
             Products.Name = 'DVD Player';
 
-
     entity NavEntities   as
         select
             ToSupplier.Email,
@@ -132,10 +139,11 @@ service servTest {
         from sch.mod.Products;
 
     entity SuppProducts1 as
-        select from sch.mod.Products[Name = 'Laptop'
+        select from sch.mod.Products[Name = 'DVD Player'
     ]{
         *,
         Name,
+        Price as Price : Integer,
         Description,
         ToSupplier.Address
     }
@@ -147,7 +155,7 @@ service servTest {
             Name,
             ToSupplier.Address
         from sch.mod.Products;
-
+ */
 
 /*    entity SelProducts as projection on sch.SelProducts;
 }  */
@@ -161,8 +169,4 @@ service servTest {
 
         where
             ID = : p_id;
-
-            */
-
-
-}
+}*/

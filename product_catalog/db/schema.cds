@@ -57,8 +57,8 @@ context mod {
     entity StockAvailability {
         key ID          : Integer;
             Description : localized String;
-            ToProduct   : Association to Products
-                              on ID = ID;
+            ToProduct   : Association to view.Products
+                              on ToProduct.StockAvailability = ID
     }
 
     entity Currencies {
@@ -110,6 +110,32 @@ context view {
         }
         group by
             ToProduct.ID;
+
+    entity Products      as
+        select from mod.Products
+        mixin {
+            ToStockAvailability : Association to mod.StockAvailability
+                                      on ToStockAvailability.ID = $projection.StockAvailability;
+            ToAverageRating     : Association to AverageRating
+                                      on ToAverageRating.ProductId = ID;
+        }
+        into {
+            *,
+            ToAverageRating.AverageRating as Rating,
+            case
+                when
+                    Quantity >= 8
+                then
+                    3
+                when
+                    Quantity > 0
+                then
+                    2
+                else
+                    1
+            end                           as StockAvailability : Integer,
+            ToStockAvailability
+        };
 }
 
 //***** Test Definitions *****//
@@ -235,5 +261,3 @@ entity Orders_Items {
                         quantity      : Integer;
                 }
 } */
-
-
