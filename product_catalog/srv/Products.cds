@@ -104,8 +104,52 @@ define service catProd {
 
 
 //***** Test Definitions *****//
-/* service servTest {
-    entity SelProducts as projection on sch.SelProducts;
+service servTest {
+
+    entity infix         as
+        select ToSupplier[Name = 'Tokyo Traders'].Phone from sch.mod.Products
+        where
+            Products.Name = 'DVD Player';
+
+    entity entityJoin    as
+        select Phone from sch.mod.Products
+        inner join sch.mod.Suppliers supp
+            on(
+                supp.ID = Products.ID
+            )
+            and (
+                supp.Name = 'Tokyo Traders'
+            )
+        where
+            Products.Name = 'DVD Player';
+
+
+    entity NavEntities   as
+        select
+            ToSupplier.Email,
+            ToCategory.Name,
+            ToSalesData.ToCurrency.Description
+        from sch.mod.Products;
+
+    entity SuppProducts1 as
+        select from sch.mod.Products[Name = 'Laptop'
+    ]{
+        *,
+        Name,
+        Description,
+        ToSupplier.Address
+    }
+    where
+        ToSupplier.Address.PostalCode = 1500;
+
+    entity SuppProducts  as
+        select
+            Name,
+            ToSupplier.Address
+        from sch.mod.Products;
+
+
+/*    entity SelProducts as projection on sch.SelProducts;
 }  */
 
 /* service servTest {
@@ -117,5 +161,8 @@ define service catProd {
 
         where
             ID = : p_id;
-} */
 
+            */
+
+
+}
