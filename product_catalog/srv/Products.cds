@@ -10,7 +10,7 @@ define service catProd {
             ImageUrl,
             ReleaseDate,
             DiscontinuedDate,
-            Rating, //add
+            Rating, 
             Price                       @mandatory,
             Height,
             Width,

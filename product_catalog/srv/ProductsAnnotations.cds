@@ -1,8 +1,5 @@
 using {catProd as serv} from './Products';
 
-/**
- * Annotations for Products Entity
- */
 annotate serv.Products with @(
     Capabilities : {DeleteRestrictions : {Deletable : false}},
     Common       : {Label : '{i18n>Products}'},
@@ -128,7 +125,7 @@ annotate serv.Products with @(
         title : '{i18n>Image}',
         UI    : {IsImageURL : true}
     );
-    Id                @title : '{i18n>Id}';
+    ID                @title : '{i18n>ID}';
     Name              @title : '{i18n>Name}';
     Description       @title : '{i18n>Description}';
     ToCategory        @(
@@ -251,16 +248,13 @@ annotate serv.Products with @(
                 Parameters     : [{
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : StockAvailability,
-                    ValueListProperty : 'Id'
+                    ValueListProperty : 'ID'
                 }]
             }
         }
     );
-};
+}
 
-/**
- * Annotations for Reviews Entity
- */
 annotate serv.Reviews with @(UI : {
     HeaderInfo          : {
         TypeName       : '{i18n>Review}',
@@ -294,20 +288,17 @@ annotate serv.Reviews with @(UI : {
     },
     FieldGroup #Comment : {Data : [{Value : Comment}]}
 }) {
-    Id        @(UI : {Hidden : true});
+    ID        @(UI : {Hidden : true});
     ToProduct @(UI : {Hidden : true});
     Name      @(title : '{i18n>Name}');
     Rating    @(title : '{i18n>Rating}');
-    CreatedAt @(title : '{i18n>CreatedOn}');
+    createdAt @(title : '{i18n>CreatedOn}');
     Comment   @(
         title : '{i18n>Comment}',
         UI    : {MultiLineText : true}
     );
-};
+}
 
-/**
- * Annotations for Suppliers Entity
- */
 annotate serv.Suppliers with @(Communication : {Contact : {
     fn    : Name,
     role  : '{i18n>Supplier}',
@@ -328,9 +319,6 @@ annotate serv.Suppliers with @(Communication : {Contact : {
     ]
 }});
 
-/**
- * Annotations for SalesData Entity
- */
 annotate serv.SalesData with @(
     sap.semantics : 'aggregate',
     UI            : {
@@ -363,7 +351,7 @@ annotate serv.SalesData with @(
         }
     }
 ) {
-    Id              @(
+    ID              @(
         sap.aggregation.role : 'dimension',
         UI                   : {Hidden : true}
     );
@@ -397,24 +385,18 @@ annotate serv.SalesData with @(
         sap.aggregation.role : 'dimension',
         UI                   : {Hidden : true}
     );
-};
+}
 
-/**
- * Annotations for StockAvailability Entity
- */
 annotate serv.StockAvailability with {
-    Id @(
+    ID @(
         title  : '{i18n>StockAvailability}',
         Common : {Text : {
             $value                 : Description,
             ![@UI.TextArrangement] : #TextOnly
         }}
-    )
-};
+    );
+}
 
-/**
- * Annotations for VH_Categories Entity
- */
 annotate serv.VH_Categories with {
     Code @(
         title  : '{i18n>Code}',
@@ -428,11 +410,8 @@ annotate serv.VH_Categories with {
         title : '{i18n>Category}',
         UI    : {HiddenFilter : true}
     );
-};
+}
 
-/**
- * Annotations for VH_Currencies Entity
- */
 annotate serv.VH_Currencies with {
     Code @(
         title : '{i18n>Currency}',
@@ -442,11 +421,8 @@ annotate serv.VH_Currencies with {
         title : '{i18n>Description}',
         UI    : {HiddenFilter : true}
     );
-};
+}
 
-/**
- * Annotations for VH_UnitOfMeasures Entity
- */
 annotate serv.VH_UnitOfMeasures with {
     Code @(
         title : '{i18n>Code}',
@@ -456,11 +432,8 @@ annotate serv.VH_UnitOfMeasures with {
         title : '{i18n>Description}',
         UI    : {HiddenFilter : true}
     );
-};
+}
 
-/**
- * Annotations for VH_DimensionUnits Entity
- */
 annotate serv.VH_DimensionUnits with {
     Code @(
         title : '{i18n>Code}',
@@ -470,4 +443,4 @@ annotate serv.VH_DimensionUnits with {
         title : '{i18n>Description}',
         UI    : {HiddenFilter : true}
     );
-};
+}
